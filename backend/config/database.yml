@@ -1,0 +1,36 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
+  pool:     <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
+  timeout:  5000
+  host:     <%= ENV.fetch("DB_HOST", "db") %>
+  port:     <%= ENV.fetch("DB_PORT", 3306) %>
+  username: <%= ENV.fetch("DB_USERNAME",  "root") %>
+  password: <%= ENV.fetch("DB_PASSWORD",  "") %>
+
+development:
+  primary:
+    <<: *default
+    database: hr
+  # In production swap this DSN for a real read replica.
+  # In development it aliases the same host so connects_to works without a replica.
+  primary_replica:
+    <<: *default
+    database:  hr
+    username:  <%= ENV.fetch("DB_READER_USERNAME", "salary_reader") %>
+    password:  <%= ENV.fetch("DB_READER_PASSWORD", "reader_pass") %>
+    replica:   true                  # Marks connection as read-only in ActiveRecord
+
+test:
+  <<: *default
+  database: hr_test
+
+production:
+  primary:
+    url: <%= ENV["DATABASE_URL"] %>
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS", 10) %>
+  primary_replica:
+    url:     <%= ENV["DATABASE_REPLICA_URL"] || ENV["DATABASE_URL"] %>
+    replica: true
+    pool:    <%= ENV.fetch("RAILS_MAX_THREADS", 10) %>

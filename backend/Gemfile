@@ -1,0 +1,48 @@
+source "https://rubygems.org"
+
+ruby "3.1.2"
+
+# ── Core ──────────────────────────────────────────────────────────────────────
+gem "rails",       "~> 7.2.0"
+gem "mysql2",      "~> 0.5"
+gem "puma",        "~> 6.4"
+gem "bootsnap",    require: false
+
+# ── API ───────────────────────────────────────────────────────────────────────
+gem "rack-cors"
+gem "active_model_serializers", "~> 0.10"
+
+# ── Redis & Caching ───────────────────────────────────────────────────────────
+gem "redis",            "~> 5.0"
+gem "connection_pool",  "~> 2.4"
+gem "hiredis-client"                        # C-extension for speed
+
+# ── Background Jobs ───────────────────────────────────────────────────────────
+gem "sidekiq",          "~> 7.2"
+
+# ── Audit ─────────────────────────────────────────────────────────────────────
+gem "paper_trail",      "~> 15.0"
+
+# ── Observability ─────────────────────────────────────────────────────────────
+gem "sentry-ruby"
+gem "sentry-rails"
+gem "sentry-sidekiq"
+gem "lograge"
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+gem "faker"                                 # Used in seeds only
+gem "oj"                                    # Faster JSON serialization
+
+group :development, :test do
+  gem "rspec-rails",        "~> 6.1"
+  gem "factory_bot_rails",  "~> 6.4"
+  gem "bullet"                              # N+1 detection
+  gem "pry-rails"
+  gem "dotenv-rails"
+end
+
+group :test do
+  gem "shoulda-matchers",             "~> 6.0"
+  gem "database_cleaner-active_record"
+  gem "rspec-sidekiq"
+end
