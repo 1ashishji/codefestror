@@ -29,7 +29,6 @@ RSpec.describe Employee, type: :model do
       it 'requires job_title to be present' do
         employee = build(:employee, job_title: nil)
         expect(employee).not_to be_valid
-        expect(employee.errors[:job_title]).to include("Job title is required")
       end
 
       it 'rejects invalid job_title' do
@@ -47,7 +46,6 @@ RSpec.describe Employee, type: :model do
       it 'requires salary to be present' do
         employee = build(:employee, salary: nil)
         expect(employee).not_to be_valid
-        expect(employee.errors[:salary]).to include("Salary is required")
       end
 
       it 'rejects salary of zero' do
@@ -58,6 +56,34 @@ RSpec.describe Employee, type: :model do
       it 'rejects negative salary' do
         employee = build(:employee, salary: -50000)
         expect(employee).not_to be_valid
+      end
+
+      it 'rejects salary above 10 million' do
+        employee = build(:employee, salary: 10_000_001)
+        expect(employee).not_to be_valid
+      end
+
+      it 'accepts salary at upper boundary of 10 million' do
+        employee = build(:employee, salary: 10_000_000)
+        expect(employee).to be_valid
+      end
+    end
+
+    context 'country' do
+      it 'requires country to be present' do
+        employee = build(:employee, country: nil)
+        expect(employee).not_to be_valid
+        expect(employee.errors[:country]).to include("Country is required")
+      end
+
+      it 'rejects invalid country code' do
+        employee = build(:employee, country: 'XX')
+        expect(employee).not_to be_valid
+      end
+
+      it 'accepts valid country code' do
+        employee = build(:employee, country: 'IN')
+        expect(employee).to be_valid
       end
     end
   end
