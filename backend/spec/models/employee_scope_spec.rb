@@ -39,3 +39,32 @@ RSpec.describe Employee, 'scopes', type: :model do
     end
   end
 end
+
+RSpec.describe Employee, 'pagination scope', type: :model do
+  describe '.page_after' do
+    it 'returns employees with id greater than cursor' do
+      e1 = create(:employee, full_name: 'Alpha User')
+      e2 = create(:employee, full_name: 'Beta User')
+      e3 = create(:employee, full_name: 'Gamma User')
+      results = Employee.page_after(e1.id, 10)
+      expect(results).to include(e2, e3)
+      expect(results).not_to include(e1)
+    end
+
+    it 'respects the limit parameter' do
+      5.times { |i| create(:employee, full_name: "User #{i}") }
+      results = Employee.page_after(0, 3)
+      expect(results.size).to eq(3)
+    end
+  end
+
+  describe 'cache key helpers' do
+    it 'generates country cache key' do
+      expect(Employee.country_cache_key('US')).to eq('salary_insights:country:US')
+    end
+
+    it 'generates global cache key' do
+      expect(Employee.global_cache_key).to eq('salary_insights:global')
+    end
+  end
+end
