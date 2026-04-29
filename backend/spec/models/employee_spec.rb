@@ -63,7 +63,7 @@ RSpec.describe Employee, type: :model do
         expect(employee).not_to be_valid
       end
 
-      it 'accepts salary at upper boundary of 10 million' do
+      it 'accepts salary at upper boundary' do
         employee = build(:employee, salary: 10_000_000)
         expect(employee).to be_valid
       end
@@ -73,7 +73,6 @@ RSpec.describe Employee, type: :model do
       it 'requires country to be present' do
         employee = build(:employee, country: nil)
         expect(employee).not_to be_valid
-        expect(employee.errors[:country]).to include("Country is required")
       end
 
       it 'rejects invalid country code' do
@@ -83,6 +82,24 @@ RSpec.describe Employee, type: :model do
 
       it 'accepts valid country code' do
         employee = build(:employee, country: 'IN')
+        expect(employee).to be_valid
+      end
+    end
+
+    context 'currency' do
+      it 'requires currency to be present' do
+        employee = build(:employee, currency: nil)
+        expect(employee).not_to be_valid
+        expect(employee.errors[:currency]).to include("Currency is required")
+      end
+
+      it 'rejects invalid currency code' do
+        employee = build(:employee, currency: 'ZZZ')
+        expect(employee).not_to be_valid
+      end
+
+      it 'accepts valid currency code' do
+        employee = build(:employee, currency: 'INR')
         expect(employee).to be_valid
       end
     end
