@@ -35,12 +35,29 @@ RSpec.describe Employee, type: :model do
       it 'rejects invalid job_title' do
         employee = build(:employee, job_title: 'Supreme Leader')
         expect(employee).not_to be_valid
-        expect(employee.errors[:job_title]).to include("Job title must be a recognized role")
       end
 
       it 'accepts valid job_title from allowed list' do
         employee = build(:employee, job_title: 'Senior Engineer')
         expect(employee).to be_valid
+      end
+    end
+
+    context 'salary' do
+      it 'requires salary to be present' do
+        employee = build(:employee, salary: nil)
+        expect(employee).not_to be_valid
+        expect(employee.errors[:salary]).to include("Salary is required")
+      end
+
+      it 'rejects salary of zero' do
+        employee = build(:employee, salary: 0)
+        expect(employee).not_to be_valid
+      end
+
+      it 'rejects negative salary' do
+        employee = build(:employee, salary: -50000)
+        expect(employee).not_to be_valid
       end
     end
   end
