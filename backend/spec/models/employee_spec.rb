@@ -116,5 +116,33 @@ RSpec.describe Employee, type: :model do
         expect(employee.reload.full_name).to eq('Jane Doe')
       end
     end
+
+    context 'normalize_strings' do
+      it 'upcases country code before save' do
+        employee = create(:employee, country: 'us')
+        expect(employee.reload.country).to eq('US')
+      end
+
+      it 'upcases currency code before save' do
+        employee = create(:employee, currency: 'usd')
+        expect(employee.reload.currency).to eq('USD')
+      end
+
+      it 'strips whitespace from job_title before save' do
+        employee = create(:employee, job_title: '  Engineer  ')
+        expect(employee.reload.job_title).to eq('Engineer')
+      end
+    end
+  end
+
+  describe 'scopes' do
+    context '.by_country' do
+      it 'filters employees by country' do
+        us_emp = create(:employee, country: 'US')
+        in_emp = create(:employee, country: 'IN')
+        expect(Employee.by_country('US')).to include(us_emp)
+        expect(Employee.by_country('US')).not_to include(in_emp)
+      end
+    end
   end
 end
