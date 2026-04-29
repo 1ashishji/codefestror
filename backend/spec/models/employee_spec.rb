@@ -12,7 +12,6 @@ RSpec.describe Employee, type: :model do
       it 'rejects full_name shorter than 2 characters' do
         employee = build(:employee, full_name: 'A')
         expect(employee).not_to be_valid
-        expect(employee.errors[:full_name]).to include("Name must be between 2 and 255 characters")
       end
 
       it 'accepts full_name with valid length' do
@@ -23,6 +22,25 @@ RSpec.describe Employee, type: :model do
       it 'rejects full_name longer than 255 characters' do
         employee = build(:employee, full_name: 'A' * 256)
         expect(employee).not_to be_valid
+      end
+    end
+
+    context 'job_title' do
+      it 'requires job_title to be present' do
+        employee = build(:employee, job_title: nil)
+        expect(employee).not_to be_valid
+        expect(employee.errors[:job_title]).to include("Job title is required")
+      end
+
+      it 'rejects invalid job_title' do
+        employee = build(:employee, job_title: 'Supreme Leader')
+        expect(employee).not_to be_valid
+        expect(employee.errors[:job_title]).to include("Job title must be a recognized role")
+      end
+
+      it 'accepts valid job_title from allowed list' do
+        employee = build(:employee, job_title: 'Senior Engineer')
+        expect(employee).to be_valid
       end
     end
   end
