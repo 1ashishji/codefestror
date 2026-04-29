@@ -32,3 +32,13 @@ RSpec.describe InsightGenerationService, type: :service do
     end
   end
 end
+
+RSpec.describe InsightGenerationService, 'edge cases', type: :service do
+  describe '#call with no employees' do
+    it 'returns zero metrics when no employees exist for country' do
+      result = described_class.call('ZZ')
+      expect(result[:metrics][:count]).to eq(0)
+      expect(result[:metrics][:top_job_title]).to eq('N/A')
+    end
+  end
+end
