@@ -42,3 +42,16 @@ RSpec.describe 'Api::V1::Insights', type: :request do
     end
   end
 end
+
+RSpec.describe 'Api::V1::Insights Edge Cases', type: :request do
+  describe 'GET /api/v1/insights/health_alerts' do
+    it 'returns low and high salary anomalies' do
+      create(:employee, salary: 1000, country: 'US')
+      create(:employee, salary: 9999999, country: 'US')
+      get '/api/v1/insights/health_alerts'
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      expect(json['data']).to include('low_anomalies', 'high_anomalies')
+    end
+  end
+end

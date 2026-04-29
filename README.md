@@ -480,3 +480,40 @@ Stop:
 ```bash
 sudo docker-compose down
 ```
+
+---
+
+## Test-Driven Development (TDD) Approach
+
+This project follows a strict **Test-Driven Development** methodology:
+
+### Test Stack
+- **RSpec** — BDD testing framework for Ruby
+- **FactoryBot** — Test data generation
+- **Shoulda Matchers** — One-liner validation tests
+- **DatabaseCleaner** — Test isolation between examples
+
+### Test Coverage (25+ test cases)
+
+| Layer | File | Test Cases |
+|-------|------|------------|
+| Model Validations | `employee_spec.rb` | 20 tests covering full_name, job_title, salary, country, currency |
+| Model Callbacks | `employee_spec.rb` | 5 tests for name/string normalization |
+| Model Scopes | `employee_scope_spec.rb` | 6 tests for filtering and pagination |
+| Services | `insight_generation_service_spec.rb` | 5 tests for metrics calculation |
+| Services | `employee_promotion_service_spec.rb` | 3 tests for salary promotion logic |
+| API Requests | `employees_spec.rb` | 7 tests for CRUD endpoints |
+| API Requests | `employees_search_spec.rb` | 3 tests for search and error handling |
+| API Requests | `insights_spec.rb` | 5 tests for analytics endpoints |
+
+### TDD Workflow
+Each feature was developed using the Red-Green-Refactor cycle:
+1. **Red** — Write a failing test that defines expected behavior
+2. **Green** — Write minimal code to make the test pass
+3. **Refactor** — Clean up code while keeping tests green
+
+### Running Tests
+```bash
+docker-compose exec web bundle exec rspec
+docker-compose exec web bundle exec rspec --format documentation
+```
