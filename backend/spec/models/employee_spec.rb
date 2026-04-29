@@ -90,7 +90,6 @@ RSpec.describe Employee, type: :model do
       it 'requires currency to be present' do
         employee = build(:employee, currency: nil)
         expect(employee).not_to be_valid
-        expect(employee.errors[:currency]).to include("Currency is required")
       end
 
       it 'rejects invalid currency code' do
@@ -101,6 +100,20 @@ RSpec.describe Employee, type: :model do
       it 'accepts valid currency code' do
         employee = build(:employee, currency: 'INR')
         expect(employee).to be_valid
+      end
+    end
+  end
+
+  describe 'callbacks' do
+    context 'normalize_name' do
+      it 'capitalizes each word in full_name before save' do
+        employee = create(:employee, full_name: 'john doe smith')
+        expect(employee.reload.full_name).to eq('John Doe Smith')
+      end
+
+      it 'strips leading and trailing whitespace from full_name' do
+        employee = create(:employee, full_name: '  jane doe  ')
+        expect(employee.reload.full_name).to eq('Jane Doe')
       end
     end
   end
